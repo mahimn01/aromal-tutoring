@@ -1,0 +1,18 @@
+{
+  "name": "Aromal Mihraj — Private Tutoring",
+  "short_name": "Aromal Tutoring",
+  "description": "Brampton private tutor. SAT 1540, six AP 4–5. Math, Science, AP, SAT prep — online or in-person across the GTA.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f1ebde",
+  "theme_color": "#1a1815",
+  "lang": "en-CA",
+  "categories": ["education", "productivity"],
+  "icons": [
+    { "src": "/assets/icon-192.png", "type": "image/png", "sizes": "192x192", "purpose": "any" },
+    { "src": "/assets/icon-512.png", "type": "image/png", "sizes": "512x512", "purpose": "any" },
+    { "src": "/assets/icon-512.png", "type": "image/png", "sizes": "512x512", "purpose": "maskable" }
+  ]
+}

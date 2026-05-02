@@ -1,0 +1,18 @@
+{
+  "name": "aromal-tutoring",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Aromal Mihraj — private high-school tutoring in Brampton. Static site, zero framework, full SEO.",
+  "scripts": {
+    "dev": "npx --yes serve -l 3000 .",
+    "build:js": "npx --yes terser app.js -c passes=2,pure_getters=true,unsafe=true,unsafe_arrows=true,drop_console=true -m \"reserved=['React','window']\" -o app.min.js",
+    "build:images": "bash scripts/build-images.sh",
+    "build:fonts": "bash scripts/build-fonts.sh",
+    "build": "npm run build:js && npm run build:images",
+    "deploy": "npx --yes vercel --prod",
+    "preview": "npx --yes vercel"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

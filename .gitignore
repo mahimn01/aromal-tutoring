@@ -1,0 +1,26 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Dependencies (no build deps right now, but future-proof)
+node_modules/
+
+# Vercel
+.vercel/
+
+# Env (currently unused — Calendly uses public embed URL only)
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor
+.idea/
+.vscode/
+*.swp
+
+# Temp
+/tmp-*

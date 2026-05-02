@@ -1,0 +1,13 @@
+/* TEAM */
+Tutor: Aromal Mihraj
+Site: https://aromaltutoring.com/
+Contact: aromalmihraj42@gmail.com
+Location: Brampton, Ontario, Canada
+
+/* SITE */
+Last update: 2026-04-29
+Language: English (en-CA)
+Standards: HTML5, CSS3, ES2020
+Components: Vanilla JavaScript — no frameworks
+Fonts: Fraunces, Instrument Serif, JetBrains Mono, Inter (Google Fonts)
+Hosting: Vercel

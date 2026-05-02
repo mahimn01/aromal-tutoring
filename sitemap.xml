@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://aromaltutoring.com/</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://aromaltutoring.com/assets/aromal-portrait.jpg</image:loc>
+      <image:title>Aromal Mihraj — Brampton Private Tutor</image:title>
+      <image:caption>Aromal Mihraj, Brampton-based high school private tutor for SAT, AP exams, and Ontario Math/Science.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://aromaltutoring.com/assets/og-image.jpg</image:loc>
+      <image:title>Aromal Mihraj — Private Tutoring</image:title>
+    </image:image>
+  </url>
+</urlset>
