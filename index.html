@@ -426,12 +426,13 @@
   .booking .left li::before{content:'✦';color:var(--sienna);font-size:13px}
   .calendly-wrap{border:1px solid var(--rule);border-radius:6px;background:var(--paper);
     overflow:hidden;min-height:700px;position:relative}
-  .calendly-inline-widget{min-width:320px;height:700px;position:relative}
-  /* Loading state shown inside the widget div until widget.js replaces it */
-  .calendly-loading{position:absolute;inset:0;display:flex;flex-direction:column;
+  #calendly-mount{position:relative}
+  /* Loading state shown inside the mount until JS swaps it for Calendly's iframe.
+     Normal flow (not absolute) so it tears down cleanly when innerHTML is cleared. */
+  .calendly-loading{display:flex;flex-direction:column;height:700px;
     align-items:center;justify-content:center;gap:16px;padding:40px;text-align:center;
     font-family:'Fraunces','Fraunces Fallback',serif;font-weight:300;font-size:16px;
-    color:var(--muted-2);background:var(--paper);pointer-events:auto}
+    color:var(--muted-2);background:var(--paper)}
   .calendly-loading p{margin:0;line-height:1.4}
   .calendly-loading a{color:var(--sienna);font-weight:500;text-decoration:underline;
     text-decoration-thickness:1px;text-underline-offset:4px;
@@ -973,14 +974,12 @@
           </ul>
         </div>
         <div class="calendly-wrap">
-          <!-- Calendly inline widget — official auto-init pattern.
-               widget.js scans for .calendly-inline-widget on load and replaces
-               the inner content with the booking iframe. The loading state below
-               sits inside the div so it's automatically removed when ready. -->
-          <div class="calendly-inline-widget"
-               id="calendly-mount"
-               data-url="https://calendly.com/aromalmihraj42/sat-tutoring?hide_gdpr_banner=1&amp;background_color=f1ebde&amp;text_color=1a1815&amp;primary_color=b14a2c"
-               style="min-width:320px;height:700px;">
+          <!-- Calendly mount. We deliberately do NOT add class="calendly-inline-widget"
+               here so widget.js's auto-discovery skips this element. We init the widget
+               explicitly in app.js once the lazy-loaded script is ready, which avoids
+               (a) the loading-overlay-covers-iframe issue and (b) the chance of double
+               init from auto-discovery firing on a script we lazy-loaded. -->
+          <div id="calendly-mount" style="min-width:320px;height:700px;">
             <div class="calendly-loading">
               <div class="calendly-spinner" aria-hidden="true"></div>
               <p>Loading the booking calendar&hellip;</p>
