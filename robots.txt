@@ -52,5 +52,5 @@ Crawl-delay: 10
 User-agent: SemrushBot
 Crawl-delay: 10
 
-Sitemap: https://aromaltutoring.com/sitemap.xml
-Host: https://aromaltutoring.com
+Sitemap: https://aromal.me/sitemap.xml
+Host: https://aromal.me

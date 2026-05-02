@@ -1,6 +1,6 @@
 /* TEAM */
 Tutor: Aromal Mihraj
-Site: https://aromaltutoring.com/
+Site: https://aromal.me/
 Contact: aromalmihraj42@gmail.com
 Location: Brampton, Ontario, Canada
 

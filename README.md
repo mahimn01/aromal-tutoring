@@ -1,8 +1,8 @@
-# aromaltutoring.com
+# aromal.me
 
 Tutoring site for Aromal Mihraj. Brampton, ON.
 
-Live: https://aromal-tutoring.vercel.app
+Live: https://aromal.me
 
 ## Local
 
