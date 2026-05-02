@@ -21,12 +21,15 @@
       ]
     },
     {
-      "source": "/",
+      "source": "/assets/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400" },
-        { "key": "Link", "value": "</assets/fonts/fraunces-normal-300-600.woff2>; rel=preload; as=font; type=font/woff2; crossorigin" },
-        { "key": "Link", "value": "</assets/fonts/instrument-serif-italic-400.woff2>; rel=preload; as=font; type=font/woff2; crossorigin" },
-        { "key": "Link", "value": "</app.min.js>; rel=preload; as=script" }
+        { "key": "Cache-Control", "value": "public, max-age=2592000" }
+      ]
+    },
+    {
+      "source": "/assets/(.*)\\.(avif|webp|jpg|jpeg|png|svg|woff2)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     },
     {
@@ -37,15 +40,9 @@
       ]
     },
     {
-      "source": "/assets/(.*)\\.(avif|webp|jpg|jpeg|png|svg|woff2)",
+      "source": "/app(\\.min)?\\.js",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
-      ]
-    },
-    {
-      "source": "/assets/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=2592000" }
       ]
     },
     {
@@ -55,9 +52,10 @@
       ]
     },
     {
-      "source": "/app(\\.min)?\\.js",
+      "source": "/",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+        { "key": "Cache-Control", "value": "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400" },
+        { "key": "Link", "value": "</assets/fonts/fraunces-normal-300-600.woff2>; rel=preload; as=font; type=font/woff2; crossorigin, </assets/fonts/instrument-serif-italic-400.woff2>; rel=preload; as=font; type=font/woff2; crossorigin, </app.min.js>; rel=preload; as=script" }
       ]
     }
   ],
