@@ -13,8 +13,11 @@ fi
 
 cd "$(dirname "$0")/.."
 
-# Step 1: crop master 4:5 portrait frame (800x1000) — adjust offsets if subject moves
-sips -c 1000 800 --cropOffset 100 600 "$SOURCE" --out /tmp/portrait-master.jpg > /dev/null
+# Step 1: crop master 4:5 portrait frame (800x1000), subject horizontally centered.
+# Source is 1600x1200 landscape. Subject's face sits ~x=880 in source.
+# crop_x_start = 880 - 400 = 480 (centers his face in the 800-wide window).
+# crop_y_start = 80 (slight headroom; bottom lands at y=1080, keeping the thumb in frame).
+sips -c 1000 800 --cropOffset 80 480 "$SOURCE" --out /tmp/portrait-master.jpg > /dev/null
 
 # Step 2: generate 3 sizes for srcset
 for w in 400 600 800; do
@@ -29,8 +32,9 @@ for w in 400 600 800; do
 done
 sips -s format jpeg -s formatOptions 60 /tmp/p-800.jpg --out assets/aromal-portrait.jpg > /dev/null
 
-# Step 4: og-image (1200x630 social card)
-sips -c 630 1200 --cropOffset 200 200 "$SOURCE" --out /tmp/og.jpg > /dev/null
+# Step 4: og-image (1200x630 social card) — landscape crop, subject left-of-center
+# so social previews show his face + leave room for site title overlay if added later.
+sips -c 630 1200 --cropOffset 250 280 "$SOURCE" --out /tmp/og.jpg > /dev/null
 sips -s format jpeg -s formatOptions 65 /tmp/og.jpg --out assets/og-image.jpg > /dev/null
 
 # Step 5: favicons + PWA icons (from master, square-cropped at face level)

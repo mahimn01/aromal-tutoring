@@ -213,6 +213,7 @@
 
   // ─── Hide nav on scroll-down, show on scroll-up ────────
   const nav = document.querySelector('.nav');
+  let suppressNavHide = false;   // pause hide-on-scroll during programmatic scrolls
   if (nav) {
     let lastY = window.scrollY;
     let ticking = false;
@@ -220,12 +221,55 @@
       if (ticking) return;
       requestAnimationFrame(() => {
         const y = window.scrollY;
-        if (y > 100 && y > lastY) nav.style.transform = 'translateY(-100%)';
+        if (suppressNavHide || y < 100) nav.style.transform = 'translateY(0)';
+        else if (y > lastY) nav.style.transform = 'translateY(-100%)';
         else nav.style.transform = 'translateY(0)';
         lastY = y;
         ticking = false;
       });
       ticking = true;
     }, { passive: true });
+  }
+
+  // ─── Robust anchor-link smooth scroll ──────────────────
+  // Computes the nav height live (so it works on any screen size, even after
+  // resize), keeps the nav visible during the programmatic scroll, and updates
+  // the URL hash without triggering a second jump.
+  const scrollToId = (id) => {
+    const target = document.getElementById(id);
+    if (!target) return false;
+    const navH = nav ? nav.offsetHeight : 64;
+    const y = target.getBoundingClientRect().top + window.scrollY - navH - 12;
+    suppressNavHide = true;
+    nav && (nav.style.transform = 'translateY(0)');
+    window.scrollTo({ top: Math.max(0, y), behavior: reduce ? 'auto' : 'smooth' });
+    // Re-enable nav-hide once the smooth scroll has had time to settle.
+    setTimeout(() => { suppressNavHide = false; }, 900);
+    return true;
+  };
+
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    const id = a.getAttribute('href').slice(1);
+    if (!id) return;
+    if (scrollToId(id)) {
+      e.preventDefault();
+      // Push the hash without the browser's native instant-jump.
+      if (history.pushState) history.pushState(null, '', '#' + id);
+    }
+  });
+
+  // Honor a hash in the URL on initial load (after fonts/images settle).
+  if (location.hash && location.hash.length > 1) {
+    const id = location.hash.slice(1);
+    // Wait one frame so layout is committed, then scroll without animation
+    // (initial-load smooth-scroll feels like an unrequested motion).
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      const target = document.getElementById(id);
+      if (!target) return;
+      const navH = nav ? nav.offsetHeight : 64;
+      window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - navH - 12, behavior: 'auto' });
+    }));
   }
 })();

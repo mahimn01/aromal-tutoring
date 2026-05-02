@@ -115,7 +115,11 @@
     font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,Roboto,'Helvetica Neue',Arial,sans-serif;
     -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
     overflow-x:hidden;font-size:15px;line-height:1.5}
-  html{scroll-behavior:smooth;scroll-padding-top:80px}
+  /* JS handles smooth scroll so it can compute nav height live and survive
+     resize / mobile / scroll-direction nav hiding. CSS provides the static
+     fallback for users with JS disabled. */
+  html{scroll-padding-top:80px}
+  @media (max-width:640px){html{scroll-padding-top:64px}}
   a{color:inherit;text-decoration:none}
   ::selection{background:var(--sienna);color:var(--paper)}
   img{max-width:100%;display:block}
@@ -472,16 +476,9 @@
   /* SR-only helper */
   .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
-  /* ── PERFORMANCE: skip rendering work for offscreen sections ─
-     content-visibility:auto lets the browser skip layout/paint
-     for sections not yet in the viewport. contain-intrinsic-size
-     reserves vertical space so scrollbar position stays stable. */
-  #problem,#about,#subjects,#method,#proof,#voices,#faq,#book{
-    content-visibility:auto;
-    contain-intrinsic-size:auto 1200px}
-  #contact{content-visibility:auto;contain-intrinsic-size:auto 600px}
-
-  /* GPU-accelerate the marquee + blackboard wipe (transform-only animations) */
+  /* GPU-accelerate transform-only animations (marquee, nav hide, blackboard wipe).
+     content-visibility was tested but broke anchor-link scroll math (reserved
+     heights diverged from actual heights, landing #about etc. mid-section). */
   .contact-marquee,.bb-frame{will-change:transform}
   .nav{will-change:transform}
 
