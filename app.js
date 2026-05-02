@@ -176,16 +176,32 @@
   // ─── Calendly: lazy-load on intersection (saves ~250KB on first paint) ───
   const calendlyMount = document.getElementById('calendly-mount');
   if (calendlyMount && 'IntersectionObserver' in window) {
+    const CALENDLY_URL = 'https://calendly.com/aromalmihraj42/sat-tutoring?hide_gdpr_banner=1&background_color=f1ebde&text_color=1a1815&primary_color=b14a2c';
+    const mountWidget = () => {
+      calendlyMount.innerHTML = '';
+      calendlyMount.className = 'calendly-inline-widget';
+      calendlyMount.style.minWidth = '320px';
+      calendlyMount.style.height = '680px';
+      // Use the official programmatic API rather than relying on
+      // widget.js's DOMContentLoaded auto-scan (which we'd miss).
+      if (window.Calendly && typeof window.Calendly.initInlineWidget === 'function') {
+        window.Calendly.initInlineWidget({ url: CALENDLY_URL, parentElement: calendlyMount });
+      } else {
+        // Fallback: replace mount with a plain link if the SDK never loads
+        calendlyMount.className = 'calendly-fallback';
+        calendlyMount.innerHTML = '<p>Couldn\'t load the calendar. <a href="' + CALENDLY_URL + '" target="_blank" rel="noopener">Open Calendly in a new tab →</a></p>';
+      }
+    };
     const loadCalendly = () => {
+      // If widget.js is already on the page (e.g., second mount), just init
+      if (window.Calendly) { mountWidget(); return; }
       const script = document.createElement('script');
       script.src = 'https://assets.calendly.com/assets/external/widget.js';
       script.async = true;
-      script.onload = () => {
-        calendlyMount.className = 'calendly-inline-widget';
-        calendlyMount.setAttribute('data-url', 'https://calendly.com/aromalmihraj42/sat-tutoring?hide_gdpr_banner=1&background_color=f1ebde&text_color=1a1815&primary_color=b14a2c');
-        calendlyMount.style.minWidth = '320px';
-        calendlyMount.style.height = '680px';
-        calendlyMount.innerHTML = '';
+      script.onload = mountWidget;
+      script.onerror = () => {
+        calendlyMount.className = 'calendly-fallback';
+        calendlyMount.innerHTML = '<p>Calendly didn\'t load. <a href="' + CALENDLY_URL + '" target="_blank" rel="noopener">Open it in a new tab →</a></p>';
       };
       document.body.appendChild(script);
     };
