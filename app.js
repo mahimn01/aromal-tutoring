@@ -173,75 +173,7 @@
     });
   }
 
-  // ─── Calendly: lazy-load on intersection ───────────────
-  // Explicit init via Calendly.initInlineWidget({url, parentElement}). The
-  // mount div in the HTML deliberately omits class="calendly-inline-widget"
-  // so widget.js's auto-discovery skips it. This avoids two failure modes:
-  //   1. Auto-discovery races against our lazy script load
-  //   2. Calendly's iframe ends up underneath our absolute-positioned loading state
-  const calendlyMount = document.getElementById('calendly-mount');
-  if (calendlyMount && 'IntersectionObserver' in window) {
-    const CALENDLY_URL = 'https://calendly.com/aromalmihraj42/sat-tutoring?hide_gdpr_banner=1&background_color=f1ebde&text_color=1a1815&primary_color=b14a2c';
-    const CALENDLY_SCRIPT = 'https://assets.calendly.com/assets/external/widget.js';
-
-    const showFallback = (msg) => {
-      calendlyMount.innerHTML =
-        '<div class="calendly-loading"><p>' + msg + '</p>' +
-        '<a href="https://calendly.com/aromalmihraj42/sat-tutoring" ' +
-        'target="_blank" rel="noopener noreferrer">' +
-        'Open Calendly in a new tab &rarr;</a></div>';
-    };
-
-    // Poll briefly for window.Calendly. The script is parsed/executed synchronously
-    // before script.onload fires, so this almost always succeeds on attempt 0.
-    const initWidget = (attempts) => {
-      if (window.Calendly && typeof window.Calendly.initInlineWidget === 'function') {
-        // Tear down loading state so Calendly's iframe is the only child.
-        calendlyMount.innerHTML = '';
-        try {
-          window.Calendly.initInlineWidget({
-            url: CALENDLY_URL,
-            parentElement: calendlyMount
-          });
-        } catch (err) {
-          showFallback('Calendly returned an error.');
-        }
-        return;
-      }
-      if (attempts >= 60) {  // ~3s of polling at 50ms
-        showFallback("Calendly didn't initialize.");
-        return;
-      }
-      setTimeout(() => initWidget(attempts + 1), 50);
-    };
-
-    const loadCalendly = () => {
-      // If something else already loaded the script (or Calendly global exists), init now.
-      if (window.Calendly) { initWidget(0); return; }
-      const existing = document.querySelector('script[src*="calendly.com/assets/external/widget.js"]');
-      if (existing) {
-        // Wait for the existing script to finish, then init
-        if (existing.readyState === 'complete' || existing.readyState === 'loaded') initWidget(0);
-        else existing.addEventListener('load', () => initWidget(0));
-        return;
-      }
-      const script = document.createElement('script');
-      script.src = CALENDLY_SCRIPT;
-      script.async = true;
-      script.onload = () => initWidget(0);
-      script.onerror = () => showFallback("Couldn't reach Calendly.");
-      document.body.appendChild(script);
-      // Safety net: if 15s pass and there's still no iframe, surface a fallback link.
-      setTimeout(() => {
-        if (!calendlyMount.querySelector('iframe')) showFallback('Taking longer than expected.');
-      }, 15000);
-    };
-
-    const io = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting) { io.disconnect(); loadCalendly(); }
-    }, { rootMargin: '600px' });
-    io.observe(calendlyMount);
-  }
+  // Calendly is now a direct <iframe> in HTML — no JS needed for it.
 
   // ─── Hide nav on scroll-down, show on scroll-up ────────
   const nav = document.querySelector('.nav');

@@ -424,26 +424,20 @@
   .booking .left li{font-family:'Fraunces','Fraunces Fallback',serif;font-weight:400;font-size:16px;
     display:flex;align-items:baseline;gap:14px;color:var(--ink)}
   .booking .left li::before{content:'✦';color:var(--sienna);font-size:13px}
+  /* Calendly: direct iframe embed (no widget.js — bulletproof, no CSP grief).
+     Loading state is a CSS pseudo-element behind the iframe; once Calendly's
+     content paints, the iframe (z-index:1) covers it. No JS involved. */
   .calendly-wrap{border:1px solid var(--rule);border-radius:6px;background:var(--paper);
     overflow:hidden;min-height:700px;position:relative}
-  #calendly-mount{position:relative}
-  /* Loading state shown inside the mount until JS swaps it for Calendly's iframe.
-     Normal flow (not absolute) so it tears down cleanly when innerHTML is cleared. */
-  .calendly-loading{display:flex;flex-direction:column;height:700px;
-    align-items:center;justify-content:center;gap:16px;padding:40px;text-align:center;
-    font-family:'Fraunces','Fraunces Fallback',serif;font-weight:300;font-size:16px;
-    color:var(--muted-2);background:var(--paper)}
-  .calendly-loading p{margin:0;line-height:1.4}
-  .calendly-loading a{color:var(--sienna);font-weight:500;text-decoration:underline;
-    text-decoration-thickness:1px;text-underline-offset:4px;
-    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.12em;
-    text-transform:uppercase}
-  .calendly-loading a:hover{color:var(--sienna-deep)}
-  .calendly-spinner{width:32px;height:32px;border:2px solid var(--rule-strong);
-    border-top-color:var(--sienna);border-radius:50%;animation:calSpin 0.9s linear infinite}
-  @keyframes calSpin{to{transform:rotate(360deg)}}
-  /* Once Calendly replaces the inner content, the .calendly-loading div is gone.
-     If for any reason it survives (e.g. script blocked), the fallback link still works. */
+  .calendly-wrap::before{content:"Loading the booking calendar…";
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    color:var(--muted-2);font-family:'Fraunces','Fraunces Fallback',serif;
+    font-weight:300;font-size:16px;text-align:center;padding:40px;pointer-events:none;z-index:0}
+  .calendly-iframe{position:relative;z-index:1;border:0;width:100%;height:700px;
+    display:block;background:var(--paper)}
+  .calendly-fallback{padding:40px;text-align:center;font-family:'Fraunces','Fraunces Fallback',serif;
+    color:var(--muted-2)}
+  .calendly-fallback a{color:var(--sienna);font-weight:500}
 
   /* ── CONTACT + FOOTER ────────────────────────────────── */
   .contact{padding-bottom:60px;position:relative;overflow:hidden}
@@ -974,18 +968,23 @@
           </ul>
         </div>
         <div class="calendly-wrap">
-          <!-- Calendly mount. We deliberately do NOT add class="calendly-inline-widget"
-               here so widget.js's auto-discovery skips this element. We init the widget
-               explicitly in app.js once the lazy-loaded script is ready, which avoids
-               (a) the loading-overlay-covers-iframe issue and (b) the chance of double
-               init from auto-discovery firing on a script we lazy-loaded. -->
-          <div id="calendly-mount" style="min-width:320px;height:700px;">
-            <div class="calendly-loading">
-              <div class="calendly-spinner" aria-hidden="true"></div>
-              <p>Loading the booking calendar&hellip;</p>
-              <a href="https://calendly.com/aromalmihraj42/sat-tutoring" target="_blank" rel="noopener noreferrer">Or open it in a new tab &rarr;</a>
+          <!-- Direct iframe embed of Calendly. No widget.js, no inline scripts,
+               no CSP gymnastics. Calendly officially supports this pattern via
+               the embed_domain + embed_type=Inline query params. The iframe is
+               native-lazy-loaded so the request only fires when scrolled near. -->
+          <iframe
+            class="calendly-iframe"
+            src="https://calendly.com/aromalmihraj42/sat-tutoring?embed_domain=aromal.me&amp;embed_type=Inline&amp;hide_gdpr_banner=1&amp;background_color=f1ebde&amp;text_color=1a1815&amp;primary_color=b14a2c"
+            title="Book a tutoring session with Aromal Mihraj"
+            loading="lazy"
+            referrerpolicy="origin"
+            allow="payment; clipboard-write"
+          ></iframe>
+          <noscript>
+            <div class="calendly-fallback">
+              <a href="https://calendly.com/aromalmihraj42/sat-tutoring" target="_blank" rel="noopener noreferrer">Open the booking calendar &rarr;</a>
             </div>
-          </div>
+          </noscript>
         </div>
       </div>
     </div>
